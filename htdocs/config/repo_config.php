@@ -11,4 +11,10 @@ return [
         'mykey2' => 'WRITE',
         'mykey3' => 'ADMIN',
     ],
+
+    // fetching projects available for anybody 
+    //'read_without_key' => false,
+    
+    // all manipulations on repo disabled
+    //'read_only' => true,
 ];

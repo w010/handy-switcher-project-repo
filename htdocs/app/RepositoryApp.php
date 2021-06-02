@@ -16,10 +16,10 @@
 
 // version of repository engine (storage, structure etc)
 // - change only when output / communication / repo conf changes
-const REPO_VERSION = '0.2.3';
+const REPO_VERSION = '0.2.4';
 
 // version of app itself - not interesting for using api
-const REPO_APP_VERSION = '0.4.1';
+const REPO_APP_VERSION = '0.4.2';
 
 
 
@@ -199,6 +199,11 @@ class RepositoryApp extends XCore  {
         // get key from session and check permissions every time - might have changed in the meantime
         $this->key = (string) $_SESSION['repo_auth']['key'];
         $this->accessLevel = (string) $this->settings['repo_keys'][$this->key];
+        
+        if ($this->settings['read_without_key'])    {
+            $this->accessLevel = 'READ';
+            $this->key = 'fake_read_key';
+        }
     }
 
 
@@ -260,7 +265,8 @@ class RepositoryApp extends XCore  {
                     'wrapItem' => '',
                     'glue' => ' | ',
                 ]),
-                'AUTH_LEVEL' => $this->getAccessLevel() ? '<span class="authlevel">Auth level / permission: <b class="level-success">' . $this->getAccessLevel() . '</b></span>' : '',
+                'AUTH_LEVEL' => $this->getAccessLevel() ?: 'UNAUTHORIZED',
+                'AUTH_LEVEL_CLASS' => $this->getAccessLevel() === 'ADMIN' ? 'level-success' : ($this->getAccessLevel() === 'WRITE' ? 'level-success' : ($this->getAccessLevel() === 'READ' ? 'level-info' : 'level-error' )),
                 'LINK_LOGOUT' => $this->linkTo('End session/logout', ['action' => 'logout']),
         ]);
     }
@@ -319,6 +325,8 @@ class RepositoryApp extends XCore  {
      */
     protected function action_push()
     {
+        $this->check_access_level('WRITE');
+
         $defaultResponse = [
             'success' => false,      
         ];
@@ -541,13 +549,16 @@ class RepositoryApp extends XCore  {
 
 
 
-    protected function check_access_level(string $level): void
+    public function check_access_level(string $level): void
     {
+        if ($level === 'WRITE' && $this->accessLevel === 'ADMIN')
+            return;
+
         if ($this->accessLevel !== $level)    {
-            $this->msg('Unauthorized - check access level failed', 'error');
+            $this->msg('Unauthorized - permission level too low for this operation', 'error');
             $this->sendContent([
                 'success' => false,
-                'code' => 'INVALID_KEY',
+                'code' => 'AUTH_LEVEL_TOO_LOW',
             ]);
             exit;
         }
