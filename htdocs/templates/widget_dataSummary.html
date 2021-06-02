@@ -1,0 +1,81 @@
+
+
+        <div class="subBlock">
+            
+            <h4>Audit</h4>
+            
+            
+            <div class="audit">
+                <p>Item count: <span class="result">###COUNTER###</span></p>
+            </div>
+            
+            
+            <div class="audit ###AUDIT__LAST_CHECK__CLASS###">
+                <p>Last check time: 
+                    <!--<span class="auditname" title="Test whether duplicated uuids exists within data jsons">
+                        UUID uniqueness:</span>-->
+                    <span class="result">###AUDIT__LAST_CHECK###</span>
+                </p>
+                <span class="info">###AUDIT__LAST_CHECK__INFO###</span>
+            </div>
+            
+            
+
+            <a class="btn" href="###LINK_RECHECK###">Recheck</a>
+            
+
+            
+            <div class="audit ###AUDIT__UUID_UNIQUENESS__CLASS###">
+                <p>Test: 
+                    <span class="auditname" title="Test whether duplicated uuids exists within data jsons">
+                        UUID uniqueness:</span> - Result:
+                    <span class="result">###AUDIT__UUID_UNIQUENESS###</span>
+                </p>
+                <span class="info">###AUDIT__UUID_UNIQUENESS__INFO###</span>
+            </div>
+            
+            
+            <div class="audit ###AUDIT__MULTIPROJECT_JSON_FILES__CLASS###">
+                <p>Test: 
+                    <span class="auditname" title="Check if there's no big Json files with multiple projects (this format is
+                        not supported anymore (as a stored data source) - use only single project-per-file configs, when
+                        you manipulate in the data dir.
+                        - But big Jsons can be always autoconverted to the required form. So - you can still put
+                        your full export from Switcher into the data dir, only it won't be read on the fly - use
+                        the dedicated action to trigger conversion.">
+                        Files structure consistency</span> - Result: 
+                    <span class="result">###AUDIT__MULTIPROJECT_JSON_FILES###</span>
+                </p>
+                <span class="info">###AUDIT__MULTIPROJECT_JSON_FILES__INFO###</span>
+                ###AUDIT__MULTIPROJECT_JSON_FILES__LINK_CONVERT###
+            </div>
+            
+        </div>
+
+
+
+        <div class="subBlock">
+
+            <h4>Raw Metadata</h4>
+
+            <pre>###META###</pre>
+
+        </div>
+
+
+        <br>
+        <br>
+
+        <div class="subBlock">
+
+            <h4>Dump</h4>
+
+            <a class="btn" href="###LINK_DOWNLOAD_ALL###">Download all in JSON</a>
+            
+            <br>
+            <small><i>If ever for any reason you loose ajax communication Switcher -> Repository,
+                here's always available (for admins) full json export, ready to upload in 
+                Switcher options panel.</i></small>
+
+        </div>
+

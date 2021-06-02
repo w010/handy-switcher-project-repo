@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Projects Repository / Handy Switcher · WTP</title>
+
+    <base href="###BASE_HREF###">
+    <style>
+
+*   {
+	box-sizing: border-box;
+}
+body {
+	font-family: "Segoe UI", Tahoma, sans-serif;
+	font-size: 1.1em;
+    background-color: #333;
+    color: #e1e1e1;
+    margin: 0 0 150px;
+}
+#main   {
+    padding: 30px 50px;
+}
+h1  {
+	font-size: 2em;
+}
+h2  {
+	margin: .1em 0 .7em;
+	font-size: 1.6em;
+    font-style: italic;
+    color: #d59062;
+}
+h3  {
+	margin: 1em 0 .7em;
+	font-size: 1.25em;
+}
+h4  {
+	margin: 10px 0;
+}
+p   {
+	font-size: 1.1em;
+}
+a {
+	color: #d59062;
+    text-decoration: none;
+    transition: background-color .3s, color .3s;
+}
+a:hover {
+	color: #e7aa82;
+    text-decoration: none;
+}
+.btn    {
+    background-color: #7c7b7b;
+    color: #ff7418;
+    border: 1px solid #4f4f4f;
+    text-shadow: 1px 1px 2px #2c2c2c;
+    border-radius: 6px;
+    padding: 6px 26px;
+    margin-bottom: 8px;
+    display: inline-block;
+}
+    .btn:hover  {
+        background-color: #616060;
+        color: #e7aa82;
+        border-color: #7c7b7b;
+    }
+.to-left    {   float: left;    }
+.to-right   {   float: right;   }
+.clear  {   clear: both;    }
+.row    {   display: flex;  }
+
+.col-1  {width: calc(100% / 12 * 1);}
+.col-2  {width: calc(100% / 12 * 2);}
+.col-3  {width: calc(100% / 12 * 3);}
+.col-4  {width: calc(100% / 12 * 4);}
+.col-5  {width: calc(100% / 12 * 5);}
+.col-6  {width: calc(100% / 12 * 6);}
+.col-7  {width: calc(100% / 12 * 7);}
+.col-8  {width: calc(100% / 12 * 8);}
+.col-9  {width: calc(100% / 12 * 9);}
+.col-10  {width: calc(100% / 12 * 10);}
+.col-11  {width: calc(100% / 12 * 11);}
+
+footer {
+    margin-top: 40px;
+    padding: 8px 50px;
+    font-style: italic;
+    
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #4f4f4f;
+}
+footer p    {
+    margin: 0.5em 0;
+}
+.menu a    {
+    padding: 8px 18px;
+    display: inline-block;
+}
+.menu a:hover    {
+    background: #2b2b2b;
+    color: #e7aa82;
+    border-radius: 3px;
+}
+.menu a.active{
+    color: #e7aa82;
+    text-decoration: underline;
+}
+hr {
+    margin-top: 10px;
+    border-color: #a7a7a7;
+}
+.authlevel  {
+    display: inline-block;
+    margin: 0 20px;
+}
+
+/* widgets */
+.widget {
+    background-color: #4a4a4a;
+    padding: 10px 22px;
+    border-radius: 4px;
+}
+.widget h4 {
+    margin-top: 2px;
+}
+.widget .subBlock   {
+    background-color: #7c7b7b;
+    color: #000;
+    border: 1px solid gray;
+    box-shadow: 2px 3px 5px #333;
+    margin: 6px 0 12px;
+    padding: 12px;
+}
+.widget .subBlock a  {
+    
+}
+.widget .subBlock .btn    {
+    background-color: #4f4f4f;
+    border: 1px solid #777;
+    color: #f1853d;
+}
+    .widget .subBlock .btn:hover  {
+        background-color: #6c6c6c;
+        color: #f1945b;
+        border-color: #4f4f4f;
+    }
+.widget .audit {
+    border: 1px dotted #afafaf;
+    padding: 0 10px;
+    margin-bottom: 10px;
+}
+.widget .audit .auditname {
+    font-weight: 500;
+    border-bottom: 1px dotted;
+    cursor: help;
+}
+.widget .audit .result {
+    font-weight: 500;
+    text-shadow: 2px 1px 2px #05050580;
+}
+.widget .audit .info {
+    font-style: italic;
+    display: none;
+    /*display: inline-block;*/
+    margin-bottom: 20px;
+}
+    /* show audit info only on not passed */
+    .widget .audit.failed .info,
+    .widget .audit.unknown .info {
+        display: inline-block;
+    }
+    .widget .audit .info.always-visible {
+        display: inline-block;
+    }
+.widget .audit.passed .result { color: rgb(156, 233, 144); }
+.widget .audit.unknown .result { color: rgb(232, 230, 75); }
+.widget .audit.failed .result { color: rgb(229, 82, 41); }
+
+.projects-list .projectItem {
+}
+.projects-list .projectItem h4 {
+    margin-top: 0;
+}
+.projects-list .projectItem .uuid   {
+    font-family: monospace;
+    white-space: pre;
+    float: right;
+}
+    .projects-list .projectItem.uuid_duplicated {
+        border-color: rgb(233, 232, 160);
+        border-width: 2px;
+    }
+    .projects-list .projectItem.uuid_duplicated .uuid {
+        color: rgb(236, 119, 87);
+        text-shadow: 1px 1px 2px #000000;
+    }
+
+.projects-list .contextItem  {
+    display: inline-block;
+    word-break: break-all;
+}
+    .projects-list .contextItem.col-4  {
+        font-weight: 650;
+        font-size: 0.7em;
+    }
+    .projects-list .contextItem.col-8  {
+        font-size: 0.8em;
+    }
+.projects-list .contexts .subheading,
+.projects-list .links .subheading  {
+    font-style: italic;
+    margin-bottom: 5px;
+}
+.projects-list .count {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 0.9em;
+}
+.col-6:first-child > .widget    {
+    margin-right: 12px;
+}
+.col-6:last-child > .widget    {
+    margin-left: 12px;
+}
+
+
+/* status & notifications */
+
+.status.info      { background: rgb(85, 218, 232);} 
+.status.success   { background: rgb(156, 233, 144);} 
+.status.warn      { background: rgb(233, 232, 160);} 
+.status.error     { background: rgb(233, 151, 127);} 
+
+.level-info       { color: rgb(85, 218, 232);}
+.level-success    { color: rgb(156, 233, 144);}
+.level-warn       { color: rgb(233, 232, 160);}
+.level-error      { color: rgb(233, 151, 127);}
+
+    </style>
+</head>
+<body>
+    <div id="main">
+
+        <h2>Handy Switcher - Project Repository</h2>
+        <h1>###APP_TITLE###</h1>
+    
+    
+        <div class="messages">
+            ###MESSAGES###
+        </div>
+    
+    
+    
+        <div class="content">
+            ###PAGE_CONTENT###
+        </div>
+    </div>
+
+    <footer>
+        <div class="menu">
+            ###MENU_MAIN###
+            |
+            ###AUTH_LEVEL###
+            |
+            ###LINK_LOGOUT###
+        </div>
+
+        <hr>
+
+        <p><i><span class="brand">wolo.pl '.' studio</span> / <a href="https://wolo.pl/handyswitcher/">www</a></i></p>
+    </footer>
+</body>
+</html>
