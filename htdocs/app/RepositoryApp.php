@@ -19,7 +19,7 @@
 const REPO_VERSION = '0.2.3';
 
 // version of app itself - not interesting for using api
-const REPO_APP_VERSION = '0.4.0';
+const REPO_APP_VERSION = '0.4.1';
 
 
 
@@ -351,24 +351,24 @@ class RepositoryApp extends XCore  {
             // look in current repo data
             foreach(Util::getProjects($this->dataPath) as $projectTestItem)  {
                 // check if UUID already exists
-                if ($projectTestItem['uuid']  &&  $projectTestItem['uuid'] === $Project->getUuid())   {
+                if ($projectTestItem->getUuid()  &&  $projectTestItem->getUuid() === $Project->getUuid())   {
                     // send back data to feed diff / merge dialog
                     $this->msg('Uuid already exist', 'error');
                     $this->sendContent($defaultResponse + [
                         'code' => 'CONFLICT_UUID',
                         'result' => [
-                            'project_conflicted' => $projectTestItem,
+                            'project_conflicted' => $projectTestItem->toArray(),
                         ],
                     ] + $defaultResponse);
                 }
 
-                if (stristr($projectTestItem['name'], $Project->getName()))    {
+                if (stristr($projectTestItem->getName(), $Project->getName()))    {
                     // send back data to feed diff / merge dialog
                     $this->msg('Similar name exist, review', 'error');
                     $this->sendContent([
                         'code' => 'CONFLICT_NAME',
                         'result' => [
-                            'project_conflicted' => $projectTestItem,
+                            'project_conflicted' => $projectTestItem->toArray(),
                         ],
                     ] + $defaultResponse);
                 }
