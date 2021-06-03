@@ -10,7 +10,7 @@
  * 
  * Subpackage: Projects Repository
  *
- * based on XCore version: 0.2.3
+ * based on XCore version: 0.2.4
  */
 
 
@@ -19,7 +19,7 @@
 const REPO_VERSION = '0.2.4';
 
 // version of app itself - not interesting for using api
-const REPO_APP_VERSION = '0.4.3';
+const REPO_APP_VERSION = '0.4.4';
 
 
 
@@ -138,7 +138,7 @@ class RepositoryApp extends XCore  {
      * Repo access level
      * @var string
      */
-	protected $accessLevel = 'READ';
+	protected $accessLevel = '';
 
 	
 	
@@ -156,11 +156,15 @@ class RepositoryApp extends XCore  {
 
 
         // init & validate setup
-        $this->dataDir = $this->settings['data_dir'];
+        $this->dataDir = trim($this->settings['data_dir'], '/');
         if (!$this->dataDir)   {
             Throw new Exception('Configuration error! No "data_dir" set', 982634);
         }
-        $this->dataPath = PATH_site . rtrim($this->dataDir.'/', '/') . '/';
+        $this->dataPath = PATH_site . $this->dataDir. '/';
+
+        if ($this->settings['read_only'])   {
+            $this->actionsAvailable = ['handshake', 'logout', 'fetch'];
+        }
     }
 
 
@@ -180,6 +184,7 @@ class RepositoryApp extends XCore  {
         // authorisation
 
         session_start();
+        $session_webroot = $_SERVER['HTTP_HOST'] . dirname($GLOBALS['_SERVER']['SCRIPT_NAME']);
 
         // update auth session if new key comes
         $key_incoming = XCoreUtil::cleanInputVar($_SERVER['HTTP_SWITCHER_REPO_KEY'] ?? $_GET['key'] ?? '');
@@ -187,7 +192,7 @@ class RepositoryApp extends XCore  {
             // (in case any problems authorizing with valid key, check what XCoreUtil::cleanInputVar does with incoming var)
             if (in_array($key_incoming, array_keys($this->settings['repo_keys'])))    {
                 // update session
-                $_SESSION['repo_auth']['key'] = $key_incoming;
+                $_SESSION['repo_auth'][$session_webroot]['key'] = $key_incoming;
             }
             // deauthorise if invalid
             else {
@@ -197,10 +202,10 @@ class RepositoryApp extends XCore  {
         }
 
         // get key from session and check permissions every time - might have changed in the meantime
-        $this->key = (string) $_SESSION['repo_auth']['key'];
+        $this->key = (string) $_SESSION['repo_auth'][$session_webroot]['key'];
         $this->accessLevel = (string) $this->settings['repo_keys'][$this->key];
         
-        if ($this->settings['read_without_key'])    {
+        if (!$this->key && $this->settings['read_without_key'])    {
             $this->accessLevel = 'READ';
             $this->key = 'fake_read_key';
         }

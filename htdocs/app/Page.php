@@ -22,6 +22,7 @@ class Page extends XCorePage  {
             'REPO_VERSION' => REPO_VERSION,
             'REPO_APP_VERSION' => REPO_APP_VERSION,
             'INFO__READ_WITHOUT_KEY' => '',
+            'INFO__DEMO_MODE' => '',
         ]);
         
         if ($this->App->getSettings()['read_without_key'])  {
