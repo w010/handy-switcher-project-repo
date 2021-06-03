@@ -60,7 +60,11 @@ abstract class XCoreAppRunner
                 ($_SERVER['ORIG_PATH_TRANSLATED'] ?: $_SERVER['PATH_TRANSLATED']) :
                 ($_SERVER['ORIG_SCRIPT_FILENAME'] ?: $_SERVER['SCRIPT_FILENAME']))));
             // define('PATH_site', realpath(dirname(PATH_thisScript)).'/');
-            define('PATH_site', str_replace('/', '//', realpath(dirname(PATH_thisScript)).'/'));
+            // define('PATH_site', str_replace('/', '//', realpath(dirname(PATH_thisScript)).'/'));
+            // define('PATH_site', rtrim(realpath(dirname(PATH_thisScript).'/'), '/') . '/');
+            define('PATH_site', str_replace('\\', '\\\\', 
+                    rtrim(realpath(dirname(PATH_thisScript).'/'), '/')
+                                . '/'));
         }
     }
 

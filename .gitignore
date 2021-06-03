@@ -1,1 +1,8 @@
+*.meta
+htdocs/data/!.htaccess
+*.json
+*.log
 *.lnk
+*.url
+*.rar
+*.zip

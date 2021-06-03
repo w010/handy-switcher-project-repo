@@ -1,6 +1,6 @@
 <?php
 
-const XCORE_VERSION = '0.2.1';
+const XCORE_VERSION = '0.2.4';
 
 
 
@@ -271,7 +271,7 @@ abstract class XCore implements XCoreSingleton {
 
 
     /**
-     * Compiles main App output to display
+     * Compiles main App output to display / extend to add some global markers for base template
      *
      * @param array $response Data returned from actions or other operations
      * @throws Exception

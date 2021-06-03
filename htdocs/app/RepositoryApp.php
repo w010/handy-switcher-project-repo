@@ -10,7 +10,7 @@
  * 
  * Subpackage: Projects Repository
  *
- * based on XCore version: 0.2.1
+ * based on XCore version: 0.2.3
  */
 
 
@@ -19,7 +19,7 @@
 const REPO_VERSION = '0.2.4';
 
 // version of app itself - not interesting for using api
-const REPO_APP_VERSION = '0.4.2';
+const REPO_APP_VERSION = '0.4.3';
 
 
 
@@ -104,7 +104,7 @@ class RepositoryApp extends XCore  {
 
     
     protected $actionsAvailable = [
-        'fetch', 'push', 'handshake', 'logout', 'audit', 'convert_json', 'project_delete', 'download_all',
+        'handshake', 'logout', 'fetch', 'push', 'audit', 'convert_json', 'project_delete', 'download_all',
     ];
 	
 
