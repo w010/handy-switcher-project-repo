@@ -19,13 +19,13 @@
 const REPO_VERSION = '0.2.4';
 
 // version of app itself - not interesting for using api
-const REPO_APP_VERSION = '0.4.4';
+const REPO_APP_VERSION = '0.4.5';
 
 
 
  /**
  * wolo.pl '.' studio
- * 2017-2021
+ * 2017-2025
  * wolo.wolski(at)gmail.com
  * https://wolo.pl/
  * 
