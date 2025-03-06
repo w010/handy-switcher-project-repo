@@ -6,3 +6,6 @@ htdocs/data/!.htaccess
 *.url
 *.rar
 *.zip
+
+.idea
+.run
