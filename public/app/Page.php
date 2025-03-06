@@ -24,13 +24,13 @@ class Page extends XCorePage  {
             'INFO__READ_WITHOUT_KEY' => '',
             'INFO__DEMO_MODE' => '',
         ]);
-        
-        if ($this->App->getSettings()['read_without_key'])  {
+
+        if ($this->App->getSettings()['repo']['read_without_key'])  {
             $this->View->assign('INFO__READ_WITHOUT_KEY', '<p>Option <i class="level-warn">read_without_key</i> is enabled!
 				<br><small><i>(That means anybody can fetch the projects without key-authorization)</i></small></p>');
         }
 
-        if ($this->App->getSettings()['DEMO_MODE'])  {
+        if ($this->App->getSettings()['repo']['DEMO_MODE'])  {
             $this->View->assign('INFO__DEMO_MODE', '<p>Option <i class="level-warn">DEMO_MODE</i> is enabled!
 				<br><small><i>(Limited functionality - all critical and manipulating functionality is disabled, but <br>repo can fake some write-access actions output)</i></small></p>');
         }
@@ -39,9 +39,9 @@ class Page extends XCorePage  {
 
         return $this->View->getOutput();
     }
-    
-    
-    
+
+
+
     /**
      * @return string
      * @throws Exception

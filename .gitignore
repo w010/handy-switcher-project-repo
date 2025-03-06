@@ -1,5 +1,5 @@
 *.meta
-htdocs/data/!.htaccess
+public/data/!.htaccess
 *.json
 *.log
 *.lnk
@@ -9,3 +9,6 @@ htdocs/data/!.htaccess
 
 .idea
 .run
+_logs
+_RES
+app_config.php

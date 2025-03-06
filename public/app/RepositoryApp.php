@@ -3,11 +3,11 @@
  * Projects Repository app
  * Handy Switcher add-on
  *
- * 
+ *
  * BE/FE/Env Handy Switcher (TYPO3 dedicated, but is kind of universal)
  * Great help for integrators with many web projects, that runs on multiple parallel environments/contexts.
- * 
- * 
+ *
+ *
  * Subpackage: Projects Repository
  *
  * based on XCore version: 0.2.4
@@ -19,7 +19,7 @@
 const REPO_VERSION = '0.2.4';
 
 // version of app itself - not interesting for using api
-const REPO_APP_VERSION = '0.4.5';
+const REPO_APP_VERSION = '0.5.0-dev';
 
 
 
@@ -28,32 +28,32 @@ const REPO_APP_VERSION = '0.4.5';
  * 2017-2025
  * wolo.wolski(at)gmail.com
  * https://wolo.pl/
- * 
+ *
  * https://chrome.google.com/webstore/detail/typo3-backend-frontend-ha/ohemimdlihjdeacgbccdkafckackmcmn
  * https://github.com/w010/chrome-typo3-switcher
- * 
- * 
+ *
+ *
  *
  * This component here is a simple (but fully functional - in basis) draft of Project Repository serverside.
  * The idea is to centralize/keep in-sync company's webprojects urls, to multiple working environments of each,
  * to make sure every developer in team when starting work on a project has always full set of latest and checked set
  * of urls to projects and its servers / instances / stages to lightspeed jumping between them only swapping the domain
- * within one click, without even need to configure your common projects manually to use. Just wait for someone else 
+ * within one click, without even need to configure your common projects manually to use. Just wait for someone else
  * do it and fetch ready config ;)
- * 
+ *
  * (Ok, maybe it kinda sounds like "wtf, why do I even need something like that, when I can make a bookmark
- * on a browser bar like I do for years" but believe me or not, if you maintain dozens of multidomain webprojects on 
+ * on a browser bar like I do for years" but believe me or not, if you maintain dozens of multidomain webprojects on
  * automated parallel environments on everyday basis, do every task on different one of them, then integrate changes
  * one-by-one on every stage server and every client has different naming conventions, this one changed domains recently,
  * that one broke subdomains, the other one never documents anything, and this one over there thinks you remember all
  * of urls to all of important-only-to-him subpages on dev, because you worked there, once, for an hour, three months ago...
  * After a few weeks using this you probably won't imagine your work without this plugin anymore.)
- * 
+ *
  * You can start to use this script as-is just by putting it somewhere on your webserver (rather http auth protected),
  * upload projects data (as json files, like these exported from Chrome plugin) into /data directory and that's it,
  * basically ready to fetch by your teammates.
  * It may be a good base to write something better, if you need. Ie. as Typo3 plugin and records, using fe_user
- * authentication, or so. (That one might be helpful when I finish push-config-to-repo functionality.)  
+ * authentication, or so. (That one might be helpful when I finish push-config-to-repo functionality.)
  */
 
 
@@ -73,21 +73,17 @@ const REPO_APP_VERSION = '0.4.5';
 class RepositoryApp extends XCore  {
 
 
-    /**
-     * Repository config path
-     */
-    const REPO_CONFIG_FILE = 'config/repo_config.php';
-
-
 
     /**
      * Defaults
      * @var array
      */
     protected $defaultSettingsApp = [
-        'repo_keys' => [],
-        'data_dir' => 'data',
-        'log_repo_path' => 'data/repo.log',
+        'repo' => [
+            'repo_keys' => [],
+            'data_dir' => 'data',
+            'log_repo_path' => 'data/repo.log',
+        ],
 
         'pages' => [
             'home' => ['title' => 'Home'],
@@ -95,18 +91,18 @@ class RepositoryApp extends XCore  {
         ],
 
         'menuMain' => [
-            ['pageId' => 'home'],    
-            ['pageId' => 'maintenance'],    
+            ['pageId' => 'home'],
+            ['pageId' => 'maintenance'],
         ],
     ];
 
 
 
-    
+
     protected $actionsAvailable = [
         'handshake', 'logout', 'fetch', 'push', 'audit', 'convert_json', 'project_delete', 'download_all',
     ];
-	
+
 
     /**
      * Only dir name
@@ -133,36 +129,58 @@ class RepositoryApp extends XCore  {
      * @var string
      */
 	protected $key = '';
-	
+
 	/**
      * Repo access level
      * @var string
      */
 	protected $accessLevel = '';
 
-	
-	
+
+
 
 
     protected function configure()
     {
+        // no .htaccess
+        if (!file_exists(PATH_site.'public/.htaccess'))   {
+            $this->msg('- No <b>public/.htaccess</b> file found. Http password is recommended. <i>(NOTE - "Repo keys" are only for internal roles in team)</i>', 'warn');
+        }
+
+        // no config file
+        if (!file_exists(PATH_site.static::CONFIG_FILE))   {
+            $this->msg('- FIRST RUN? No <b>config/app_config.php</b> file found! Copying from app_config.example.php', 'warn');
+            copy(PATH_site . 'config/app_config.example.php', PATH_site . static::CONFIG_FILE);
+        }
+
+        // setup
         parent::configure();
 
-        $repoConfig = [];
-        if (file_exists(self::REPO_CONFIG_FILE))   {
-            $repoConfig = @include_once(self::REPO_CONFIG_FILE);
+        // warn about default keys left in config
+        if ($this->settings['repo']['repo_keys']['mykey1'] || $this->settings['repo']['repo_keys']['mykey2'] || $this->settings['repo']['repo_keys']['mykey3']) {
+            $this->msg('- You should remove default example <b>repo_keys</b> from app_config.php', 'warn');
         }
-        $this->settings = array_merge($this->settings, (array) $repoConfig);
-
 
         // init & validate setup
-        $this->dataDir = trim($this->settings['data_dir'], '/');
+        $this->dataDir = trim($this->settings['repo']['data_dir'], '/');
         if (!$this->dataDir)   {
             Throw new Exception('Configuration error! No "data_dir" set', 982634);
         }
         $this->dataPath = PATH_site . $this->dataDir. '/';
 
-        if ($this->settings['read_only'])   {
+        // check data directory / init dummy data
+        if (!is_dir($this->dataPath))   {
+            $this->msg('- FIRST RUN? No data dir found at: <b>[project]/'.$this->dataDir.'/</b>. - <b>Inserting example data</b>', 'warn');
+            mkdir($this->dataPath);
+            foreach (glob(PATH_site.'data_example/' . '{.,}*', GLOB_BRACE) as $file) {
+                if (is_file($file)) {
+                    copy($file, $this->dataPath . basename($file));
+                }
+            }
+        }
+
+        // other configuration
+        if ($this->settings['repo']['read_only'])   {
             $this->actionsAvailable = ['handshake', 'logout', 'fetch'];
         }
     }
@@ -174,7 +192,7 @@ class RepositoryApp extends XCore  {
      */
 	public function init()
     {
-        XCoreLog::set('repo', $this->settings['log_repo_path']);
+        XCoreLog::set('repo', $this->settings['repo']['log_repo_path']);
         parent::init();
         // for testing, but no need to control access
         if (!$this->isAjaxCall  &&  $_GET['ajax']) {
@@ -190,7 +208,7 @@ class RepositoryApp extends XCore  {
         $key_incoming = XCoreUtil::cleanInputVar($_SERVER['HTTP_SWITCHER_REPO_KEY'] ?? $_GET['key'] ?? '');
         if ($key_incoming) {
             // (in case any problems authorizing with valid key, check what XCoreUtil::cleanInputVar does with incoming var)
-            if (in_array($key_incoming, array_keys($this->settings['repo_keys'])))    {
+            if (in_array($key_incoming, array_keys($this->settings['repo']['repo_keys'])))    {
                 // update session
                 $_SESSION['repo_auth'][$session_webroot]['key'] = $key_incoming;
             }
@@ -203,9 +221,9 @@ class RepositoryApp extends XCore  {
 
         // get key from session and check permissions every time - might have changed in the meantime
         $this->key = (string) $_SESSION['repo_auth'][$session_webroot]['key'];
-        $this->accessLevel = (string) $this->settings['repo_keys'][$this->key];
-        
-        if (!$this->key && $this->settings['read_without_key'])    {
+        $this->accessLevel = (string) $this->settings['repo']['repo_keys'][$this->key];
+
+        if (!$this->key && $this->settings['repo']['read_without_key'])    {
             $this->accessLevel = 'READ';
             $this->key = 'fake_read_key';
         }
@@ -236,7 +254,7 @@ class RepositoryApp extends XCore  {
 		// CONTROL ACCESS
 
 
-        // check if authorized, if checking enabled - keys exists, repo is not public. if it is - is a public read mode (?) 
+        // check if authorized, if checking enabled - keys exists, repo is not public. if it is - is a public read mode (?)
         if ($this->isAjaxCall)  {
             if (!$this->key || !$this->accessLevel)    {
                 $this->msg('Unauthorized - invalid repo key', 'error');
@@ -265,7 +283,7 @@ class RepositoryApp extends XCore  {
     {
         parent::buildAppOutput($response);
         $this->View->assignMultiple([
-                'APP_TITLE' => $this->settings['repo_name'] ?: 'Projects Repository',
+                'APP_TITLE' => $this->settings['repo']['repo_name'] ?: 'Projects Repository',
                 'MENU_MAIN' => Loader::get(XCoreViewhelperMenu::class)->render('main', [
                     'wrapItem' => '',
                     'glue' => ' | ',
@@ -292,8 +310,8 @@ class RepositoryApp extends XCore  {
         if ($compatibilityMessage = $this->messages['compatibility_control'])   {
             $commonOutput['compatibility'] = [$compatibilityMessage[0], $compatibilityMessage[1], 'check-engine'];
         }
-        
-        
+
+
         // add standard common response parts (move them to top)
         parent::sendContent($commonOutput + $response);
 	}
@@ -323,8 +341,8 @@ class RepositoryApp extends XCore  {
             'result' => Util::getProjects_assoc($this->dataPath)
         ]);
     }
-    
-    
+
+
     /**
      * Custom action - PUSH
      */
@@ -333,13 +351,13 @@ class RepositoryApp extends XCore  {
         $this->check_access_level('WRITE');
 
         $defaultResponse = [
-            'success' => false,      
+            'success' => false,
         ];
         $projectDataArray = (array) $_POST['projectData'];
 
         if (!count($projectDataArray))  {
             $this->msg('No incoming data to make a Project from.', 'error');
-            
+
             $this->sendContent([
                 'code' => 'EXCEPTION_DATA_ERROR',
             ] + $defaultResponse); // + operator doesn't override values!
@@ -359,7 +377,7 @@ class RepositoryApp extends XCore  {
         }
 
         // if not force overwrite, do some additional validation against conflicts / and overall data integrity
-    // todo: merge GP vars  
+    // todo: merge GP vars
         if (!$_POST['force'])    {
             // look in current repo data
             foreach(Util::getProjects($this->dataPath) as $projectTestItem)  {
@@ -400,35 +418,35 @@ class RepositoryApp extends XCore  {
             'code' => 'PROJECT_STORED',
         ]);
     }
-    
-    
+
+
     /**
-     * End key-authorized user session 
+     * End key-authorized user session
      */
 	protected function action_logout()
     {
         // clear session
         $_SESSION = [];
-        
+
         // redirect to current page (excluding 'action' param)
         XCoreUtil::redirect(
             XCoreUtil::linkTo_uri(
-                [], XCoreUtil::getCurrentBaseUrl() 
+                [], XCoreUtil::getCurrentBaseUrl()
         ));
     }
-    
-    
+
+
     /**
-     * Check data 
+     * Check data
      */
 	protected function action_audit()
     {
         $this->check_access_level('ADMIN');
-        
-        
+
+
         // read meta
         $repoDataStatus = Util::getRepoDataMetaFile();
-        
+
         // get projects, collect uuids
         $uuids = [];
         $projects = Util::getProjects($this->dataPath, $uuids);
@@ -470,20 +488,20 @@ class RepositoryApp extends XCore  {
 
         Util::saveRepoDataStatusFile($repoDataStatus);
     }
-    
-    
-    
+
+
+
     /**
      * Convert multi-project jsons to single-project
      */
 	protected function action_convert_json()
     {
         $this->check_access_level('ADMIN');
-        
+
         foreach (Util::getFilesFromDirectory_paths($this->dataPath, 'json') as $file) {
             $fileContent = file_get_contents($file);
             if (preg_match('/^\[/', trim($fileContent)))    {
-                
+
                 $fileParsedArray = (array) @json_decode($fileContent, true);
 
                 $convertCount = 0;
@@ -497,13 +515,13 @@ class RepositoryApp extends XCore  {
                 XCoreLog::get('repo')->log('CONVERT: Multi-project json: '.basename($file).' - convert to single files, import count: '.$convertCount);
             }
         }
-        
+
         $repoDataStatus = Util::getRepoDataMetaFile();
         $repoDataStatus->audit->multiproject_files = 1;
         Util::saveRepoDataStatusFile($repoDataStatus);
     }
 
-    
+
     /**
      * Download all (for admins)
      */
@@ -516,16 +534,16 @@ class RepositoryApp extends XCore  {
         print json_encode(Util::getProjects_assoc($this->dataPath));
         exit;
     }
-    
-    
-    
+
+
+
     /**
      * Delete project
      */
 	protected function action_project_delete()
     {
         $this->check_access_level('ADMIN');
-        
+
         $uuid = Util::cleanInputVar($_GET['uuid']);
 
         if (!$uuid) {
@@ -536,7 +554,7 @@ class RepositoryApp extends XCore  {
             ]);
             exit;
         }
-        
+
         foreach (Util::getFilesFromDirectory_paths($this->dataPath, 'json') as $file) {
             $fileContent = file_get_contents($file);
             $fileParsedArray = (array)@json_decode($fileContent, true);

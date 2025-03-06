@@ -1,6 +1,6 @@
 <?php
 
-const XCORE_VERSION = '0.2.4';
+const XCORE_VERSION = '0.2.4a';
 
 
 
@@ -147,7 +147,7 @@ abstract class XCore implements XCoreSingleton {
         if (file_exists(static::CONFIG_FILE))   {
             $localConfig = @include_once(static::CONFIG_FILE);
         }
-        $this->settings = array_merge($this->defaultSettingsXCore, $this->defaultSettingsApp, (array) $localConfig);
+        $this->settings = array_replace_recursive($this->defaultSettingsXCore, $this->defaultSettingsApp, (array) $localConfig);
 
 
 	    // todo later: validate pages / menu config
