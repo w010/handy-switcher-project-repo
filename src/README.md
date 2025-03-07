@@ -7,9 +7,9 @@ wolo.pl '.' studio
 ## Simple Standalone Micro App Engine
 
 * What's that?
-  
+
 > It's a really simple MVC for kickstarting really tiny webapps for your experiments and local use, it's the answer for
-> all these yours 10-liners raw php files, which has some simple task like generating some tests and logging results, 
+> all these yours 10-liners raw php files, which has some simple task like generating some tests and logging results,
 > or like your simple old database-toolbox scripts for server migration, or that one tool you wrote to parse and edit some
 > application's xml presets, to not have manually read and cut them to fix the program, which stopped to run because of
 > one broken setup, and you really wanted that app, so you wrote. a windows, xml editor in php, on xampp. In a one ugly
@@ -39,14 +39,14 @@ wolo.pl '.' studio
 > comparing modify time, overwrite etc. All what you need as a team member to have urlsets up to date, all what you need
 > as a team leader, to prepare and share url configs to each of your teams and their projects.
 > If you authorize with ADMIN permission, you can check database status, integrity and do some necessary conversions
-> of storing formats, see and get rid of duplicates and other stuff. 
+> of storing formats, see and get rid of duplicates and other stuff.
 
 
 * How to request Ajax with App/Api version check?
 
 > Call ajax with additional custom header:
 > ```header: {'XCore-MyApp-Version-Request': 'x.y.z'},```
-> and then in XCore App, in request handling, you perform a check: 
+> and then in XCore App, in request handling, you perform a check:
 > ```if (version_compare($_SERVER['HTTP_XCORE_MYAPP_VERSION_REQUEST'], APP_VERSION) > 0)```
 > and do something about that, like inform user about limited functionality or so.
 
@@ -64,3 +64,21 @@ it returns json. How?
 > Define output path in config: ```'log_myapp_path' => 'relative/path/to.log'```
 > Then start it at app init like that: ```XCoreLog::set('mylogger', $this->settings['log_myapp_path']);```
 > Use: ```XCoreLog... or Log::get('mylogger')->log('Something important happened! ');
+
+
+* Debugging
+
+> There is a class XCoreDebug which prints nice clean output:
+> XCoreDebug::var_dump()
+> XCoreDebug::var_export()
+> XCoreDebug::print_r()
+>
+> ...but in most cases just use a shorthand function:
+> ```debuxc(var) ```
+> ```debuxc(var, label, exit, method) ```
+> parameters:
+>   var:       variable to display
+>   label:     any text/header to display on top
+>   exit:      exits script after output, also displays backtrace
+>   method:    1 = (default) var_export, 2 = var_dump, 3 = print_r
+>

@@ -1,6 +1,6 @@
 <?php
 
-const XCORE_VERSION = '0.2.6-dev3';
+const XCORE_VERSION = '0.2.7';
 
 
 

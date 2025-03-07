@@ -31,7 +31,7 @@ class XCoreLog implements XCoreSingleton  {
      */
     public function log(string $message): void
     {
-        $filePointer = fopen($this->file, "a");
+        $filePointer = fopen(PATH_site.$this->file, "a");
 
         $logMsg = date('Y-m-d H:i:s') . "\t\t" . $message . "\n";
 
