@@ -1,6 +1,6 @@
 <?php
 
-const XCORE_VERSION = '0.2.6-dev2';
+const XCORE_VERSION = '0.2.6-dev3';
 
 
 
@@ -20,7 +20,7 @@ abstract class XCore implements XCoreSingleton {
 
     /**
      * Initial XCore settings - override in child class
-     * @var array 
+     * @var array
      */
     protected $defaultSettingsXCore = [
 
@@ -28,7 +28,7 @@ abstract class XCore implements XCoreSingleton {
 
         'DEV' => false,
         'dontExecCommands' => 0,    // only build and collect clis
-        
+
         'log_app_path' => 'app.log',
 
         'dbAuth' => [
@@ -40,17 +40,17 @@ abstract class XCore implements XCoreSingleton {
 
         // pages available to render
         'pages' => [
-            // 'PAGE_ID' => ['title' => 'PAGE TITLE'] 
-            'home' =>     ['title' => 'Home'],    
-            //'example' =>  ['title' => 'Example subpage'],    
+            // 'PAGE_ID' => ['title' => 'PAGE TITLE']
+            'home' =>     ['title' => 'Home'],
+            //'example' =>  ['title' => 'Example subpage'],
         ],
 
-        // menu config 
+        // menu config
         'menuMain' => [
             // item ref:    'href' => [ (optional) URL ],
             //              'pageId' => [ (optional) PAGE_ID from pages ],
             //              'title' => [ (optional) when using pageId, takes title from pages ]   ],
-            ['pageId' => 'home'],    
+            ['pageId' => 'home'],
             //['pageId' => 'example'],
         ],
     ];
@@ -58,7 +58,7 @@ abstract class XCore implements XCoreSingleton {
 
     /**
      * General App configuration, to be set in child classes. During init these arrays are merged: $settingsDefaultXCore + $settingsDefaultApp + $settingsLocal
-     * @var array 
+     * @var array
      */
 	protected $defaultSettingsApp = [];
 
@@ -81,14 +81,14 @@ abstract class XCore implements XCoreSingleton {
 
     /**
      * Message/error to show
-     * @var array 
+     * @var array
      */
 	protected $messages = [];
-	
+
         /**
          * // todo: decide to keep it here or not
          * Stored commands to show and/or execute
-         * @var array 
+         * @var array
          */
         public $cmds = [];
 
@@ -101,24 +101,24 @@ abstract class XCore implements XCoreSingleton {
 	protected $actionsAvailable = [];
 
 	// database connection
-	protected $dbConnection = null; 
+	protected $dbConnection = null;
 
     // pages available to render. usually set through settings/config
     // example:   'home' => ['title' => 'Home'],
     protected $pages = [];
-    
-    // menu to build from these pages or custom urls 
+
+    // menu to build from these pages or custom urls
     protected $menuMain = [];
-    
+
     /**
      * Page object
-     * @var XCorePage|null 
+     * @var XCorePage|null
      */
 	protected $Page = null;
-	
+
 	/**
-     * Base general App view 
-     * @var XCoreView|null 
+     * Base general App view
+     * @var XCoreView|null
      */
 	protected $View = null;
 
@@ -126,7 +126,7 @@ abstract class XCore implements XCoreSingleton {
 
         /**
          * Contents collection to output
-         * @var array 
+         * @var array
          */
         public $content = [];
 
@@ -138,14 +138,14 @@ abstract class XCore implements XCoreSingleton {
 	    $this->configure();
 	    //$this->init(); // don't do this in construct. init in separate call
 	}
-	
-	
+
+
 	protected function configure()
     {
 	    // set config
         $localConfig = [];
-        if (file_exists(static::CONFIG_FILE))   {
-            $localConfig = @include_once(static::CONFIG_FILE);
+        if (file_exists(PATH_site.static::CONFIG_FILE))   {
+            $localConfig = @include_once(PATH_site.static::CONFIG_FILE);
         }
         $this->settings = array_replace_recursive($this->defaultSettingsXCore, $this->defaultSettingsApp, (array) $localConfig);
 
@@ -158,7 +158,7 @@ abstract class XCore implements XCoreSingleton {
 
     /**
      * In most cases it should be able to be called in any App, without any interferences
-     * So no need to override this with custom code unless you plan more custom-code pages 
+     * So no need to override this with custom code unless you plan more custom-code pages
      */
     public function init()
     {
@@ -167,8 +167,8 @@ abstract class XCore implements XCoreSingleton {
 
 	    // optional, connects if finds config
 	    $this->dbConnection = XCoreUtil::databaseConnect($this->settings['dbAuth']);
-	    
-	    
+
+
         // init & sanitize input
         $this->action = XCoreUtil::cleanInputVar($_POST['action'] ?? $_GET['action']);
 	    // clean this value after use, to prevent potential including this var in built urls - it's purpose is single-use
@@ -176,21 +176,21 @@ abstract class XCore implements XCoreSingleton {
 
         // page object, selected on user requested id (p = page id)
 		$this->vars['p'] = XCoreUtil::cleanInputVar($_GET['p']);
-        
+
 	    $this->initPage();
     }
 
-    
+
     /**
      * In most cases it should be able to be called in any App, without any interferences
-     * So no need to override this with custom code 
+     * So no need to override this with custom code
      */
     protected function initPage()
     {
 	    $this->Page = Loader::get(XCorePage::class, $this->vars['p']);
     }
-    
-    
+
+
     /**
      * Get configuration option value
      * @param $varName
@@ -200,7 +200,7 @@ abstract class XCore implements XCoreSingleton {
     {
 	    return $this->settings[$varName] ?? null;
     }
-    
+
     /**
      * Get full configuration
      * @return array
@@ -209,7 +209,7 @@ abstract class XCore implements XCoreSingleton {
     {
 	    return $this->settings;
     }
-    
+
 
 
 
@@ -247,7 +247,7 @@ abstract class XCore implements XCoreSingleton {
      */
 	protected function sendContent(array $response = [])
     {
-        // make sure there's always 'result'. merge this way doesn't override, but sets if missed 
+        // make sure there's always 'result'. merge this way doesn't override, but sets if missed
         $response = $response + ['result' => []];
 
 	    if ($this->isAjaxCall)  {
@@ -317,19 +317,19 @@ abstract class XCore implements XCoreSingleton {
 
         $this->sendContent();
 	}
-	
 
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	// RUN HELPERS
 
 
 	/**
 	 * Add message/notice
-     * 
+     *
 	 * @param string $message
 	 * @param string $class - class for notice p, may be error or info (warn?)
 	 * @param string $index - index can be checked in tag markup, to indicate error class in form element
@@ -365,7 +365,7 @@ abstract class XCore implements XCoreSingleton {
         if ($limit) {
             $result = array_slice($result, 0, $limit, true);
         }
-        
+
 		return $result;
 	}
 
@@ -410,7 +410,7 @@ abstract class XCore implements XCoreSingleton {
 
 
 
-	
+
 
 
     // SHORT
@@ -418,7 +418,7 @@ abstract class XCore implements XCoreSingleton {
 
     /**
      * Get uri with query part
-     * 
+     *
      * @param array $params
      * @param string $uriToProcess
      * @param bool $keepCurrentVars
@@ -458,10 +458,10 @@ abstract class XCore implements XCoreSingleton {
      * (basically it will return your /app/SomeApp.php instance, which extends XCore
      * and the object is stored as singleton in Loader)
      * Of course for that reason we cannot just return $this in here, it wouldn't have much sense.
-     * 
-     * Important - don't use this when App object may be not instantiated yet, like in it's own construct / init etc. 
+     *
+     * Important - don't use this when App object may be not instantiated yet, like in it's own construct / init etc.
      * You will end in endless loop.
-     * 
+     *
      * @return XCore|object
      */
 	static public function App()
