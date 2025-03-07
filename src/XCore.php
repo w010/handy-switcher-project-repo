@@ -1,13 +1,13 @@
 <?php
 
-const XCORE_VERSION = '0.2.5a';
+const XCORE_VERSION = '0.2.6-dev2';
 
 
 
 
 /**
  * XCore - Simple Standalone Micro App Engine
- * @author wolo.pl '.' studio / 2021-2022
+ * @author wolo.pl '.' studio / 2021-2025
  */
 abstract class XCore implements XCoreSingleton {
 

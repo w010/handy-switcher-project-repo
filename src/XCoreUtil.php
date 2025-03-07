@@ -110,10 +110,15 @@ class XCoreUtil  {
 	
 	/**
      * Try to determine base url, if not configured
+     * // todo: check if we need it without stripping query anywhere - good to make it default
      */
-    static public function getCurrentBaseUrl(): string
+    static public function getCurrentBaseUrl($stripQuery = false): string
     {
-        return 'http' . ($_SERVER['HTTPS']?'s':'') .'://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        
+        return 'http' . ($_SERVER['HTTPS']?'s':'') .'://'. $_SERVER['HTTP_HOST'] 
+                . ($stripQuery ?
+                    trim(str_replace($_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']), '?& ')        
+                : $_SERVER['REQUEST_URI']);
 	}
 
 
