@@ -80,10 +80,10 @@ class Util extends XCoreUtil {
 		$sortProjects = function (ModelProject $a, ModelProject $b) {
             return strcmp($a->getName(), $b->getName());
         };
-		
+
         usort($projects, $sortProjects);
 
-        
+
         // mark duplicates on list
         foreach ($projects as $project) {
             if (count(array_keys($uuids, $project->getUuid())) > 1) {
@@ -94,8 +94,8 @@ class Util extends XCoreUtil {
 
 		return $projects;
 	}
-	
-	
+
+
 	/**
      * Get projects as associative array, ready to output
      *
@@ -106,9 +106,9 @@ class Util extends XCoreUtil {
     {
         $projectsAssoc = [];
         foreach (static::getProjects($dataDir) as $Project) {
-            $projectsAssoc[] = $Project->toArray(); 
+            $projectsAssoc[] = $Project->toArray();
         }
-        
+
         return $projectsAssoc;
 	}
 
@@ -140,12 +140,22 @@ class Util extends XCoreUtil {
 
     /**
      * READ Meta
-     * The idea is that I keep some repo data metainfo in /data/.repo file.  
+     * The idea is that I keep some repo data metainfo in /data/.repo file.
      * @return stdClass|null
+     * @throws Exception
      */
     static public function getRepoDataMetaFile(): ?stdClass
     {
-        return json_decode(file_get_contents( XCore::App()->getDataPath() . '.meta'));
+        if (file_exists(XCore::App()->getDataPath() . '.meta')) {
+            $data = json_decode(file_get_contents( XCore::App()->getDataPath() . '.meta'));
+            if (!is_object($data)) {
+                $data = new stdClass();
+            }
+            return $data;
+        }
+        else {
+            Throw new Exception('Repo Meta file not found ('.XCore::App()->getDataPath() . '.meta)', 993425);
+        }
 	}
 
 

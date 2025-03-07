@@ -445,7 +445,14 @@ class RepositoryApp extends XCore  {
 
 
         // read meta
-        $repoDataStatus = Util::getRepoDataMetaFile();
+        try     {
+            $repoDataStatus = Util::getRepoDataMetaFile();
+        } catch (Exception $e)  {
+            $this->msg('Data Meta read problem: '.$e->getMessage(), 'error');
+            $this->msg('- Creating new empty .meta file', 'warn');
+            Util::saveRepoDataStatusFile(new stdClass());
+            $repoDataStatus = Util::getRepoDataMetaFile();
+        }
 
         // get projects, collect uuids
         $uuids = [];
@@ -454,6 +461,11 @@ class RepositoryApp extends XCore  {
 
         // AUDIT:
         // test for uuid duplicate
+
+        // Ensure 'audit' exists as an object
+        if (!isset($repoDataStatus->audit) || !is_object($repoDataStatus->audit)) {
+            $repoDataStatus->audit = new stdClass();
+        }
 
         $repoDataStatus->audit->duplicated_uuids = 1;
         $uuidsDuplicates = [];
