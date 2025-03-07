@@ -17,7 +17,7 @@ class XCoreUtil  {
 
 
 	/**
-     * Database connection 
+     * Database connection
      */
 	static public function databaseConnect($auth): ?mysqli
     {
@@ -28,8 +28,8 @@ class XCoreUtil  {
 	}
 
 
-	
-	
+
+
     /**
      * Clean input variable
      * @param $value
@@ -44,9 +44,9 @@ class XCoreUtil  {
         $value = htmlspecialchars($value);
         return $value;
     }
-	
-	
-	    
+
+
+
 
 	// HTTP
 
@@ -59,13 +59,13 @@ class XCoreUtil  {
         header('Location: '.$url);
         exit;
 	}
-	
-	
-	
+
+
+
 
     /**
      * Build a nice query string from array of params
-     * 
+     *
      * @param array $params
      * @param string $uriToProcess
      * @return string
@@ -79,16 +79,16 @@ class XCoreUtil  {
         /*foreach ($uriParts as $paramValPair)    {
             [$param, $val] = explode('=', $paramValPair);
         }*/
-        
+
         $queryPart = implode('&', array_map(
 			function($k, $v) {
-				return urlencode($k).'='.urlencode($v); 
+				return urlencode($k).'='.urlencode($v);
 			},
 			array_keys($params),
 			array_values($params)
 		));
-        
-        return $uriParts[0] . ($queryPart ? '?'.$queryPart : ''); 
+
+        return $uriParts[0] . ($queryPart ? '?'.$queryPart : '');
 	}
 
 
@@ -106,18 +106,18 @@ class XCoreUtil  {
 		$uri = static::linkTo_uri($params, $uriToProcess);
 		return '<a '. $config['aTagParams'] .' href="'.$uri.'">'.$label.'</a>';
 	}
-	
-	
+
+
 	/**
      * Try to determine base url, if not configured
      * // todo: check if we need it without stripping query anywhere - good to make it default
      */
     static public function getCurrentBaseUrl($stripQuery = false): string
     {
-        
-        return 'http' . ($_SERVER['HTTPS']?'s':'') .'://'. $_SERVER['HTTP_HOST'] 
+
+        return 'http' . ($_SERVER['HTTPS']?'s':'') .'://'. $_SERVER['HTTP_HOST']
                 . ($stripQuery ?
-                    trim(str_replace($_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']), '?& ')        
+                    trim(str_replace($_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']), '?& ')
                 : $_SERVER['REQUEST_URI']);
 	}
 
@@ -149,12 +149,12 @@ class XCoreUtil  {
         [$wrapA, $wrapB] = explode('|', $wrap);
         return $wrapA . $value . $wrapB;
     }
-	
-    
 
-	
-	
-	
+
+
+
+
+
 	// FILESYSTEM
 
     /**
@@ -169,7 +169,7 @@ class XCoreUtil  {
 		if (!is_array($files))  $files = [];
 		return $files;
 	}
-	
+
 	/**
      * List files / return as filenames
      * @param string $dir
@@ -191,7 +191,7 @@ class XCoreUtil  {
                 $files[] = $file;
             }
 		}
-        
+
 		return $files;
 	}
 
@@ -219,7 +219,7 @@ class XCoreUtil  {
 
 
 	/**
-     * Exec shell command 
+     * Exec shell command
      */
 	private function exec_control($cmd, $saveCmd = true)
     {
@@ -255,14 +255,14 @@ class XCoreUtil  {
 		if ($saveCmd)   {
 			$this->cmds[] = ['command' => $cmd, 'output' => $output];
         }
-		
+
 		return $output;
 	}
 
 
-	
-	
-	
+
+
+
 	// FORM FIELDS
 
         /*public function formField_radio($name, $value, $valueDefault = '', $class = '', $id = '', $additionalParams = [])   {
@@ -283,7 +283,7 @@ class XCoreUtil  {
             $code .= ">";
             return $code;
         }*/
-        
+
         /*public function formField_check($name, $value, $valueDefault = '', $class = '', $id = '', $additionalParams = [])   {
             $params = [
                 'type' => 'checkbox',
@@ -303,8 +303,8 @@ class XCoreUtil  {
             return $code;
         }*/
 
-    
-     
+
+
 
 	// INPUT CONTROL
 

@@ -38,7 +38,7 @@ class ModelContext  {
     public function setHidden(bool $hidden): void {
         $this->hidden = $hidden;
     }
-    
+
     /**
      * @return string
      */
@@ -67,12 +67,12 @@ class ModelContext  {
         $this->color = $color;
     }
 
-    
+
 
     /**
      * @param array $itemRow
      */
-	public function __construct(array $itemRow)
+    public function __construct(array $itemRow)
     {
         $this->setName((string) $itemRow['name']);
         $this->setUrl((string) $itemRow['url']);
@@ -82,8 +82,8 @@ class ModelContext  {
 
 
     public function toArray()   {
-	    // it's good to keep here the same order as in js - to have exported files the same and avoid false diffs 
-	    return [
+        // it's good to keep here the same order as in js - to have exported files the same and avoid false diffs
+        return [
             'name' => $this->getName(),
             'url' => $this->getUrl(),
             'color' => $this->getColor(),

@@ -116,18 +116,18 @@ class ModelProject  {
     {
         $this->tstamp = $tstamp;
     }
-    
-    
+
+
     /**
      * @var RepositoryApp|XCore|object
      */
     protected $App;
-    
+
 
     /**
      * @param array $itemRow
      */
-	public function __construct(array $itemRow)
+    public function __construct(array $itemRow)
     {
         $this->App = XCore::App();
         $this->setName((string) $itemRow['name']);
@@ -139,20 +139,20 @@ class ModelProject  {
         $this->setTstamp((int) $itemRow['tstamp']);
     }
 
-    
+
 
     public function toArray(): array
     {
-	    $contexts = [];
-	    foreach ($this->getContexts() as $Context)  {
-	        $contexts[] = $Context->toArray();
+        $contexts = [];
+        foreach ($this->getContexts() as $Context)  {
+            $contexts[] = $Context->toArray();
         };
-	    $links = [];
-	    foreach ($this->getLinks() as $Link)  {
-	        $links[] = $Link->toArray();
+        $links = [];
+        foreach ($this->getLinks() as $Link)  {
+            $links[] = $Link->toArray();
         };
-	    
-	    return [
+
+        return [
             'name' => $this->getName(),
             'uuid' => $this->getUuid(),
             'contexts' => $contexts,
@@ -161,17 +161,17 @@ class ModelProject  {
             'tstamp' => $this->getTstamp(),
         ];
     }
-    
-    
+
+
     public function JSONize()
     {
-	    return json_encode($this->toArray(), JSON_PRETTY_PRINT);
+        return json_encode($this->toArray(), JSON_PRETTY_PRINT);
     }
 
     public function store($filename = ''): bool
     {
-	    $filename = $filename ?: 'project__' . strtolower(substr($this->getName(), 0, 3)) . '__' . $this->getUuid() . '.json';
-	    // add this end linebreak exactly like in js download
+        $filename = $filename ?: 'project__' . strtolower(substr($this->getName(), 0, 3)) . '__' . $this->getUuid() . '.json';
+        // add this end linebreak exactly like in js download
         return (bool) file_put_contents($this->App->getDataPath() . $filename, $this->JSONize() . "\n");
     }
 
@@ -180,7 +180,7 @@ class ModelProject  {
     {
         $this->_additionalData[$key] = $data;
     }
-    
+
     public function getAdditionalData($key)
     {
         return $this->_additionalData[$key];

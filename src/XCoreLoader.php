@@ -2,35 +2,35 @@
 
 /**
  * Loader for classes and objects (object manager with classname recognition and autoload)
- * 
+ *
  * NOTE - This class is not supposed to be called in original, only from your local App's Loader extension class!
- * 
+ *
  * Class XCoreLoader
  */
 abstract class XCoreLoader   {
-    
+
 
     /**
      * Define replacement classes in your app's Loader
      * 'SomeClass' => 'InstantiateThisOneInstead'
-     * 
+     *
      * Note, that it also tries to load all of them, expecting them: "SomeClass" in SRC dir, and "InstantiateThis...." in APP dir!
      */
     const XCLASS_MAP = [];
 
 
 
-    
+
 
     /**
      * Put all php includes into this implementation
-     * 
+     *
      * @return void
      */
     static public function includeClasses(): void
     {
         self::controlClassCall();
-        // first we load interfaces and other XC classes which might be extended / implemented in these next  
+        // first we load interfaces and other XC classes which might be extended / implemented in these next
         require_once PATH_site . 'src/XCoreSingleton.php';
         require_once PATH_site . 'src/XCore.php';
         require_once PATH_site . 'src/XCorePage.php';
@@ -40,7 +40,7 @@ abstract class XCoreLoader   {
         require_once PATH_site . 'src/XCoreWidget.php';
 
         // then all of these configured in override map
-        // (is this a good approach? in future we may need to xclass from subdirs, then review if that works or rethink) 
+        // (is this a good approach? in future we may need to xclass from subdirs, then review if that works or rethink)
         foreach (static::XCLASS_MAP as $class => $xclass) {
             require_once PATH_site . 'src/' . $class . '.php';
             require_once PATH_site . 'app/' . $xclass . '.php';
@@ -57,7 +57,7 @@ abstract class XCoreLoader   {
 
 
     /**
-     * Get an instance of given class or its xclass (replacement extension class) instead, if configured.   
+     * Get an instance of given class or its xclass (replacement extension class) instead, if configured.
      *
      * @param string $className Class name, mut not start with a backslash
      * @param array<int, mixed> $constructorParams Arguments for the constructor
@@ -79,7 +79,7 @@ abstract class XCoreLoader   {
         } else {
             $finalClassName = $className;
         }
-        // tbd: maybe also try to include default child class from app/ (trim "XCore" from classname). or better leave it configured 
+        // tbd: maybe also try to include default child class from app/ (trim "XCore" from classname). or better leave it configured
 
         // Return singleton instance if it is already registered
         if (isset(static::$singletonInstances[$finalClassName])) {
@@ -109,8 +109,8 @@ abstract class XCoreLoader   {
             }
         }
     }
-    
-    
+
+
     /**
      * Singleton instances
      *

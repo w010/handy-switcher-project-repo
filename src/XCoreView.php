@@ -39,7 +39,7 @@ class XCoreView  {
 
     /**
      * XCore App
-     * @var XCore|object 
+     * @var XCore|object
      */
     protected $App = null;
 
@@ -52,7 +52,7 @@ class XCoreView  {
     {
         $this->App = XCore::App();
         $this->templatesPath = PATH_site . rtrim(
-            (XCoreUtil::getConfVar('templatesPath') ?? 'templates')
+                (XCoreUtil::getConfVar('templatesPath') ?? 'templates')
                 , '/').'/';
     }
 
@@ -101,7 +101,7 @@ class XCoreView  {
     {
         return $this->readTemplateFile($templateName . '.html');
     }
-    
+
     /**
      * @param string $fileName
      * @return string
@@ -121,7 +121,7 @@ class XCoreView  {
 
     /**
      * Read and sets the template for the current View
-     * @param string $templateName Template name (not filename)  
+     * @param string $templateName Template name (not filename)
      * @return XCoreView
      * @throws Exception
      */
@@ -131,23 +131,23 @@ class XCoreView  {
         $this->template = $this->readTemplateFile($fileName);
         return $this;
     }
-    
-    
-    
-    
+
+
+
+
     /**
-     * Display generated messages with class if set 
+     * Display generated messages with class if set
      */
-	public function displayMessages(): string
+    public function displayMessages(): string
     {
-		$content = '';
-		foreach ($this->App->getMessages() as $message) {
-			$content .= '<p'.($message[1] ? ' class="'.$message[1].'">':'>') . $message[0] . '</p>';
-		}
-		return $content;
-	}
-	
-    
+        $content = '';
+        foreach ($this->App->getMessages() as $message) {
+            $content .= '<p'.($message[1] ? ' class="'.$message[1].'">':'>') . $message[0] . '</p>';
+        }
+        return $content;
+    }
+
+
     // TEMPLATING
 
     /**
@@ -156,13 +156,13 @@ class XCoreView  {
      * @param array $markerArray
      * @return string
      */
-	function substituteMarkerArray(string $subject, array $markerArray): string
+    function substituteMarkerArray(string $subject, array $markerArray): string
     {
-		return str_replace(array_keys($markerArray), array_values($markerArray), $subject);
-	}
+        return str_replace(array_keys($markerArray), array_values($markerArray), $subject);
+    }
 
 
-	/**
+    /**
      * Compile the body to output
      */
     public function render(): XCoreView
@@ -170,8 +170,8 @@ class XCoreView  {
         $this->output = $this->substituteMarkerArray($this->template, $this->markers);
         return $this;
     }
-	
-	
+
+
     /**
      * @return string
      */
@@ -179,7 +179,7 @@ class XCoreView  {
     {
         return $this->output;
     }
-    
+
 }
 
 

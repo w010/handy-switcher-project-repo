@@ -41,7 +41,7 @@ class ModelLink  {
     {
         $this->hidden = $hidden;
     }
-    
+
     /**
      * @return string
      */
@@ -63,16 +63,16 @@ class ModelLink  {
     /**
      * @param array $itemRow
      */
-	public function __construct(array $itemRow)
+    public function __construct(array $itemRow)
     {
         $this->setName((string) $itemRow['name']);
         $this->setUrl((string)  $itemRow['url']);
         $this->setHidden(strtolower($itemRow['hidden']) == 'true');
     }
 
-    
+
     public function toArray()   {
-	    return [
+        return [
             'name' => $this->getName(),
             'url' => $this->getUrl(),
             'hidden' => $this->isHidden(),

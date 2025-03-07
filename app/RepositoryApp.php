@@ -23,7 +23,7 @@ const REPO_APP_VERSION = '0.5.0-dev';
 
 
 
- /**
+/**
  * wolo.pl '.' studio
  * 2017-2025
  * wolo.wolski(at)gmail.com
@@ -128,13 +128,13 @@ class RepositoryApp extends XCore  {
      * Repo access key
      * @var string
      */
-	protected $key = '';
+    protected $key = '';
 
-	/**
+    /**
      * Repo access level
      * @var string
      */
-	protected $accessLevel = '';
+    protected $accessLevel = '';
 
 
 
@@ -190,7 +190,7 @@ class RepositoryApp extends XCore  {
     /**
      * Init object
      */
-	public function init()
+    public function init()
     {
         XCoreLog::set('repo', $this->settings['repo']['log_repo_path']);
         parent::init();
@@ -239,19 +239,19 @@ class RepositoryApp extends XCore  {
     }
 
 
-	/**
+    /**
      * MAIN RUN
      */
-	public function handleRequest()
+    public function handleRequest()
     {
-	    // compatibility check - if ajax has requested repository engine in specific version, compare and send special message if not matched
-	    if (version_compare($_SERVER['HTTP_SWITCHER_REPO_VERSION_REQUEST'], REPO_VERSION) > 0)    {
-	        $this->msg('Repository engine version ('.REPO_VERSION.') is lower than requested ('.$_SERVER['HTTP_SWITCHER_REPO_VERSION_REQUEST']
+        // compatibility check - if ajax has requested repository engine in specific version, compare and send special message if not matched
+        if (version_compare($_SERVER['HTTP_SWITCHER_REPO_VERSION_REQUEST'], REPO_VERSION) > 0)    {
+            $this->msg('Repository engine version ('.REPO_VERSION.') is lower than requested ('.$_SERVER['HTTP_SWITCHER_REPO_VERSION_REQUEST']
                 .'). Some features may not work or be available. Please check and update your Repo.', 'compatibility__repo_engine_version', 'compatibility_control');
         }
 
 
-		// CONTROL ACCESS
+        // CONTROL ACCESS
 
 
         // check if authorized, if checking enabled - keys exists, repo is not public. if it is - is a public read mode (?)
@@ -271,9 +271,9 @@ class RepositoryApp extends XCore  {
         $this->runAction();
 
         $this->sendContent();
-	}
+    }
 
-	/**
+    /**
      * Compiles main App output to display
      *
      * @param array $response Data returned from actions or other operations
@@ -283,14 +283,14 @@ class RepositoryApp extends XCore  {
     {
         parent::buildAppOutput($response);
         $this->View->assignMultiple([
-                'APP_TITLE' => $this->settings['repo']['repo_name'] ?: 'Projects Repository',
-                'MENU_MAIN' => Loader::get(XCoreViewhelperMenu::class)->render('main', [
-                    'wrapItem' => '',
-                    'glue' => ' | ',
-                ]),
-                'AUTH_LEVEL' => $this->getAccessLevel() ?: 'UNAUTHORIZED',
-                'AUTH_LEVEL_CLASS' => $this->getAccessLevel() === 'ADMIN' ? 'level-success' : ($this->getAccessLevel() === 'WRITE' ? 'level-success' : ($this->getAccessLevel() === 'READ' ? 'level-info' : 'level-error' )),
-                'LINK_LOGOUT' => $this->linkTo('End session/logout', ['action' => 'logout']),
+            'APP_TITLE' => $this->settings['repo']['repo_name'] ?: 'Projects Repository',
+            'MENU_MAIN' => Loader::get(XCoreViewhelperMenu::class)->render('main', [
+                'wrapItem' => '',
+                'glue' => ' | ',
+            ]),
+            'AUTH_LEVEL' => $this->getAccessLevel() ?: 'UNAUTHORIZED',
+            'AUTH_LEVEL_CLASS' => $this->getAccessLevel() === 'ADMIN' ? 'level-success' : ($this->getAccessLevel() === 'WRITE' ? 'level-success' : ($this->getAccessLevel() === 'READ' ? 'level-info' : 'level-error' )),
+            'LINK_LOGOUT' => $this->linkTo('End session/logout', ['action' => 'logout']),
         ]);
     }
 
@@ -299,7 +299,7 @@ class RepositoryApp extends XCore  {
      * @param array $response Response data to include in output (both ajax and frontend)
      * @throws Exception
      */
-	protected function sendContent(array $response = [])
+    protected function sendContent(array $response = [])
     {
         $commonOutput = [
             'repo_version' => REPO_VERSION,
@@ -314,27 +314,27 @@ class RepositoryApp extends XCore  {
 
         // add standard common response parts (move them to top)
         parent::sendContent($commonOutput + $response);
-	}
+    }
 
 
-	/**
+    /**
      * Custom action - HANDSHAKE
      * To check connection and authorisation/permissions
      */
-	protected function action_handshake()
+    protected function action_handshake()
     {
         $this->sendContent([
             'success' => true,
             'result' => [
                 'say' => 'HELLO'
-        ]]);
+            ]]);
     }
 
 
     /**
      * Custom action - FETCH    / zmienic raczej na pull, a fetch by pobieral sama liste z nazwami i uids
      */
-	protected function action_fetch()
+    protected function action_fetch()
     {
         $this->sendContent([
             'success' => true,
@@ -359,8 +359,8 @@ class RepositoryApp extends XCore  {
             $this->msg('No incoming data to make a Project from.', 'error');
 
             $this->sendContent([
-                'code' => 'EXCEPTION_DATA_ERROR',
-            ] + $defaultResponse); // + operator doesn't override values!
+                    'code' => 'EXCEPTION_DATA_ERROR',
+                ] + $defaultResponse); // + operator doesn't override values!
         }
 
         try {
@@ -371,13 +371,13 @@ class RepositoryApp extends XCore  {
             $this->msg('Data validation exception: ' . $e->getMessage(), 'error');
 
             $this->sendContent([
-                'code' => 'EXCEPTION_DATA_ERROR',
-            ] + $defaultResponse);
+                    'code' => 'EXCEPTION_DATA_ERROR',
+                ] + $defaultResponse);
             exit;
         }
 
         // if not force overwrite, do some additional validation against conflicts / and overall data integrity
-    // todo: merge GP vars
+        // todo: merge GP vars
         if (!$_POST['force'])    {
             // look in current repo data
             foreach(Util::getProjects($this->dataPath) as $projectTestItem)  {
@@ -386,22 +386,22 @@ class RepositoryApp extends XCore  {
                     // send back data to feed diff / merge dialog
                     $this->msg('Uuid already exist', 'error');
                     $this->sendContent($defaultResponse + [
-                        'code' => 'CONFLICT_UUID',
-                        'result' => [
-                            'project_conflicted' => $projectTestItem->toArray(),
-                        ],
-                    ] + $defaultResponse);
+                            'code' => 'CONFLICT_UUID',
+                            'result' => [
+                                'project_conflicted' => $projectTestItem->toArray(),
+                            ],
+                        ] + $defaultResponse);
                 }
 
                 if (stristr($projectTestItem->getName(), $Project->getName()))    {
                     // send back data to feed diff / merge dialog
                     $this->msg('Similar name exist, review', 'error');
                     $this->sendContent([
-                        'code' => 'CONFLICT_NAME',
-                        'result' => [
-                            'project_conflicted' => $projectTestItem->toArray(),
-                        ],
-                    ] + $defaultResponse);
+                            'code' => 'CONFLICT_NAME',
+                            'result' => [
+                                'project_conflicted' => $projectTestItem->toArray(),
+                            ],
+                        ] + $defaultResponse);
                 }
             }
         }
@@ -423,7 +423,7 @@ class RepositoryApp extends XCore  {
     /**
      * End key-authorized user session
      */
-	protected function action_logout()
+    protected function action_logout()
     {
         // clear session
         $_SESSION = [];
@@ -432,14 +432,14 @@ class RepositoryApp extends XCore  {
         XCoreUtil::redirect(
             XCoreUtil::linkTo_uri(
                 [], XCoreUtil::getCurrentBaseUrl()
-        ));
+            ));
     }
 
 
     /**
      * Check data
      */
-	protected function action_audit()
+    protected function action_audit()
     {
         $this->check_access_level('ADMIN');
 
@@ -506,7 +506,7 @@ class RepositoryApp extends XCore  {
     /**
      * Convert multi-project jsons to single-project
      */
-	protected function action_convert_json()
+    protected function action_convert_json()
     {
         $this->check_access_level('ADMIN');
 
@@ -537,7 +537,7 @@ class RepositoryApp extends XCore  {
     /**
      * Download all (for admins)
      */
-	protected function action_download_all()
+    protected function action_download_all()
     {
         $this->check_access_level('ADMIN');
 // todo: check utf8 stuff
@@ -552,7 +552,7 @@ class RepositoryApp extends XCore  {
     /**
      * Delete project
      */
-	protected function action_project_delete()
+    protected function action_project_delete()
     {
         $this->check_access_level('ADMIN');
 

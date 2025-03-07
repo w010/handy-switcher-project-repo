@@ -75,19 +75,19 @@ abstract class XCoreAppRunner
             define('PATH_thisScript', str_replace('//', '/', str_replace('\\', '/',
                 (PHP_SAPI == 'fpm-fcgi' || PHP_SAPI == 'cgi' || PHP_SAPI == 'isapi' || PHP_SAPI == 'cgi-fcgi') &&
                 ($_SERVER['ORIG_PATH_TRANSLATED'] || $_SERVER['PATH_TRANSLATED']) ?
-                ($_SERVER['ORIG_PATH_TRANSLATED'] ?: $_SERVER['PATH_TRANSLATED']) :
-                ($_SERVER['ORIG_SCRIPT_FILENAME'] ?: $_SERVER['SCRIPT_FILENAME']))));
+                    ($_SERVER['ORIG_PATH_TRANSLATED'] ?: $_SERVER['PATH_TRANSLATED']) :
+                    ($_SERVER['ORIG_SCRIPT_FILENAME'] ?: $_SERVER['SCRIPT_FILENAME']))));
             // define('PATH_site', realpath(dirname(PATH_thisScript)).'/');
             // define('PATH_site', str_replace('/', '//', realpath(dirname(PATH_thisScript)).'/'));
             // define('PATH_site', rtrim(realpath(dirname(PATH_thisScript).'/'), '/') . '/');
 
             // if the webroot != project root, we must strip the webroot segment from final path
-            $thisScript_dirname__webrootPathStripped = strlen(static::$webroot_path) 
-                    ? str_replace('/'.static::$webroot_path, '', dirname(PATH_thisScript))
-                    : dirname(PATH_thisScript);
-            define('PATH_site', str_replace('\\', '\\\\', 
-                    rtrim(realpath($thisScript_dirname__webrootPathStripped.'/'), '/')
-                                . '/'));
+            $thisScript_dirname__webrootPathStripped = strlen(static::$webroot_path)
+                ? str_replace('/'.static::$webroot_path, '', dirname(PATH_thisScript))
+                : dirname(PATH_thisScript);
+            define('PATH_site', str_replace('\\', '\\\\',
+                rtrim(realpath($thisScript_dirname__webrootPathStripped.'/'), '/')
+                . '/'));
         }
     }
 
@@ -99,10 +99,10 @@ abstract class XCoreAppRunner
     {
         require_once PATH_site . '/src/XCoreLoader.php';
         require_once PATH_site . '/app/Loader.php';
-        
+
         Loader::includeClasses();
     }
-    
+
 }
 
 

@@ -26,13 +26,13 @@ class Loader extends XCoreLoader  {
 
     /**
      * Put all php includes into this implementation
-     * 
+     *
      * @return void
      */
     static public function includeClasses(): void
     {
         parent::includeClasses();
-        
+
         // Put here manual includes of all custom App code which can't be autoloaded.
         // Avoid using include/require in other files than Loaders. Really it's a great place for this.
 
