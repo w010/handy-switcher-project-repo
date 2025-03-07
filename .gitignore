@@ -1,5 +1,5 @@
 *.meta
-public/data/!.htaccess
+data
 *.json
 *.log
 *.lnk

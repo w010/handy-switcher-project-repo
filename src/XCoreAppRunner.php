@@ -7,6 +7,24 @@
 abstract class XCoreAppRunner
 {
     /**
+     * Webroot path, relative to project root
+     * Set to ie. "public" if webroot entry point (index.php) is in subdirectory
+     */
+    protected static string $webroot_path = '';
+
+
+    /**
+     * Define webroot path
+     * To be used in index.php, if running from other directory than project root
+     * @param string $path
+     */
+    static public function webroot(string $path): void
+    {
+        static::$webroot_path = trim($path, '/');
+    }
+
+
+    /**
      * Prepare system environment and make sure it's ready and operational + other tech stuff
      * Also setup XCore low-level essentials like filesystem, autoload etc.
      * Often customized in local AppRunner, but no need to.
@@ -62,8 +80,13 @@ abstract class XCoreAppRunner
             // define('PATH_site', realpath(dirname(PATH_thisScript)).'/');
             // define('PATH_site', str_replace('/', '//', realpath(dirname(PATH_thisScript)).'/'));
             // define('PATH_site', rtrim(realpath(dirname(PATH_thisScript).'/'), '/') . '/');
+
+            // if the webroot != project root, we must strip the webroot segment from final path
+            $thisScript_dirname__webrootPathStripped = strlen(static::$webroot_path) 
+                    ? str_replace('/'.static::$webroot_path, '', dirname(PATH_thisScript))
+                    : dirname(PATH_thisScript);
             define('PATH_site', str_replace('\\', '\\\\', 
-                    rtrim(realpath(dirname(PATH_thisScript).'/'), '/')
+                    rtrim(realpath($thisScript_dirname__webrootPathStripped.'/'), '/')
                                 . '/'));
         }
     }

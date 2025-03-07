@@ -12,7 +12,7 @@
  * 
  * 
  * wolo.pl '.' studio
- * 2017-2021
+ * 2017-2025
  * wolo.wolski(at)gmail.com
  * https://wolo.pl/
  * 
@@ -22,7 +22,10 @@
 
 
 call_user_func(function () {
-    require_once __DIR__.'/app/AppRunner.php';
+    require_once __DIR__.'/../app/AppRunner.php';
+
+    AppRunner::webroot('public');
+
     AppRunner::ready();
     AppRunner::set();
     AppRunner::go();
