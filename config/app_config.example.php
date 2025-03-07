@@ -26,7 +26,7 @@ return [
         // CONSIDER DEACTIVATING
         'read_without_key' => true,
 
-        // disable all manipulation on repo 
+        // disable all manipulation on repo
         'read_only' => false,
 
         // Demo mode, which uses fake Write auth for dummy push action
