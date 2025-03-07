@@ -5,10 +5,10 @@
  * Simple multi-log. Use:
  * Init:
  * XCoreLog::set('mylogger', $this->settings['log_custom_path']);
- * 
+ *
  * Use:
  * XCoreLog::get('mylogger')->log('Important message!');
- * 
+ *
  * Class XCoreLog
  */
 class XCoreLog implements XCoreSingleton  {
@@ -52,10 +52,10 @@ class XCoreLog implements XCoreSingleton  {
         if (static::$loggers[$loggerName]['instance'])    {
             return static::$loggers[$loggerName]['instance'];
         }
-	    return static::$loggers[$loggerName]['instance'] = Loader::get(XCoreLog::class, $logPath);
+        return static::$loggers[$loggerName]['instance'] = Loader::get(XCoreLog::class, $logPath);
     }
-    
-    
+
+
     /**
      * Returns given logger instance
      * @param string $loggerName

@@ -12,10 +12,10 @@ abstract class XCoreViewhelper  {
 
 
     /**
-     * View 
-     * @var View|null 
+     * View
+     * @var View|null
      */
-	protected $View = null;
+    protected $View = null;
 
 
 
@@ -30,7 +30,7 @@ abstract class XCoreViewhelper  {
 
     /**
      * Compile the body to output
-     * 
+     *
      * @return string
      * @throws Exception
      */

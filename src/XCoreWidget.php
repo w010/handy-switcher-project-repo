@@ -38,8 +38,8 @@ class XCoreWidget  {
     {
         return $this->name;
     }
-    
-    
+
+
     /**
      * Returns result of Widget rendering operations. Usually ->content property,
      * possibly also some control / debug / info data

@@ -1,16 +1,16 @@
 <?php
-		
+
 
 
 class XCorePage  {
-    
+
     protected $id = '';
     protected $title = '';
     protected $content = '';
 
     /**
      * Page type - may be used in child page classes to differentiate them somehow
-     * @var string 
+     * @var string
      */
     protected $type = 'default';
 
@@ -52,7 +52,7 @@ class XCorePage  {
     {
         return $this->id;
     }
-    
+
     /**
      * @return string
      */
@@ -60,7 +60,7 @@ class XCorePage  {
     {
         return $this->title;
     }
-    
+
     /**
      * @return string
      */
@@ -91,7 +91,7 @@ class XCorePage  {
         // specific page's content is usually generated using custom method in app/Page
         $pageContentBuildMethodName = 'buildPageContent_'.$this->id;
 
-        // these methods are meant to be implemented specifically in child classes. problems with this means probably instantiating using wrong class. 
+        // these methods are meant to be implemented specifically in child classes. problems with this means probably instantiating using wrong class.
         if (!method_exists($this, $pageContentBuildMethodName)) {
             Throw new Exception('View exception: No page content generate method: ->'.$pageContentBuildMethodName.' in object '.get_class($this), 3459832);
         }
@@ -99,7 +99,7 @@ class XCorePage  {
         $this->content = $this->$pageContentBuildMethodName();
         //return $this; // ? zrobic tak samo jak widget w 0.2.5? czy to jednak moze zwracac czasem string
     }
-    
+
     /**
      * @return string
      * @throws Exception
@@ -110,7 +110,7 @@ class XCorePage  {
         /*$markers = [
             //'TOOLS' => Loader::get(ViewhelperTools::class)->render(),
         ];
-        
+
         $this->View->assignMultiple($markers);
         $this->View->render();
 
