@@ -37,6 +37,7 @@ abstract class XCoreLoader   {
         require_once PATH_site . 'src/XCoreView.php';
         require_once PATH_site . 'src/XCoreViewhelper.php';
         require_once PATH_site . 'src/XCoreViewhelperMenu.php';
+        require_once PATH_site . 'src/XCoreWidget.php';
 
         // then all of these configured in override map
         // (is this a good approach? in future we may need to xclass from subdirs, then review if that works or rethink) 

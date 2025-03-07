@@ -40,6 +40,9 @@ class XCorePage  {
             $this->id = 'home';
         }
         $this->title = $allPages[$this->id]['title'];
+
+        $this->View = Loader::get(XCoreView::class, XCoreView::TYPE__PAGE);
+        $this->View->setTemplate('page_'.$this->id);
     }
 
     /**
@@ -85,10 +88,6 @@ class XCorePage  {
      */
     public function buildPageContent(array $response = []): void
     {
-        $this->View = Loader::get(XCoreView::class, XCoreView::TYPE__PAGE);
-        $this->View->setTemplate('page_'.$this->id);
-         
-        
         // specific page's content is usually generated using custom method in app/Page
         $pageContentBuildMethodName = 'buildPageContent_'.$this->id;
 
@@ -98,6 +97,7 @@ class XCorePage  {
         }
 
         $this->content = $this->$pageContentBuildMethodName();
+        //return $this; // ? zrobic tak samo jak widget w 0.2.5? czy to jednak moze zwracac czasem string
     }
     
     /**

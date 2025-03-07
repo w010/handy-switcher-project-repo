@@ -64,29 +64,44 @@ class XCoreView  {
      * @param string $marker Without ###
      * @param $value
      * @param string $wrap Add auto prefix and suffix to marker string
+     * @return XCoreView
      */
-    public function assign(string $marker, $value, string $wrap = '###'): void
+    public function assign(string $marker, $value, string $wrap = '###'): XCoreView
     {
         if (!is_string($value)) {
             $value = '[XCoreView] Possible bad value - check the marker "'.$marker.'", which came with value of type: '.gettype($value).' and value: '.(string) $value;
         }
         $marker = XCoreUtil::markerName($marker, $wrap);
         $this->markers[$marker] = $value;
+        return $this;
     }
 
     /**
      * @param array $markers As key => value pairs  (Without ###)
      * @param string $wrap Add auto prefix and suffix to marker string
+     * @return XCoreView
      */
-    public function assignMultiple(array $markers, string $wrap = '###'): void
+    public function assignMultiple(array $markers, string $wrap = '###'): XCoreView
     {
         foreach ($markers as $marker => $value) {
             $this->assign($marker, $value, $wrap);
         }
+        return $this;
     }
 
 
 
+    /**
+     * Read template by name (omit file ext etc.)
+     * @param string $templateName
+     * @return string
+     * @throws Exception
+     */
+    protected function readTemplate(string $templateName): string
+    {
+        return $this->readTemplateFile($templateName . '.html');
+    }
+    
     /**
      * @param string $fileName
      * @return string
@@ -107,13 +122,14 @@ class XCoreView  {
     /**
      * Read and sets the template for the current View
      * @param string $templateName Template name (not filename)  
-     * @return void
+     * @return XCoreView
      * @throws Exception
      */
-    public function setTemplate(string $templateName): void
+    public function setTemplate(string $templateName): XCoreView
     {
         $fileName = $templateName . '.html';
         $this->template = $this->readTemplateFile($fileName);
+        return $this;
     }
     
     
