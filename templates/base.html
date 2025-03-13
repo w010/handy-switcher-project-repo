@@ -51,19 +51,25 @@ a:hover {
 }
 .btn    {
     background-color: #7c7b7b;
-    color: #ff7418;
+    color: #f1853d;
     border: 1px solid #4f4f4f;
     text-shadow: 1px 1px 2px #2c2c2c;
     border-radius: 6px;
     padding: 6px 26px;
     margin-bottom: 8px;
     display: inline-block;
+    cursor: pointer;
 }
     .btn:hover  {
         background-color: #616060;
         color: #e7aa82;
         border-color: #7c7b7b;
     }
+input[type=text],
+input[type=password]    {
+    border-radius: 6px;
+    padding: 6px 6px;
+}
 .to-left    {   float: left;    }
 .to-right   {   float: right;   }
 .clear  {   clear: both;    }
@@ -98,12 +104,12 @@ footer p    {
     padding: 8px 18px;
     display: inline-block;
 }
-.menu a:hover    {
+.menu a.active{
     background: #2b2b2b;
     color: #e7aa82;
     border-radius: 3px;
 }
-.menu a.active{
+.menu a:hover    {
     color: #e7aa82;
     text-decoration: underline;
 }
@@ -114,6 +120,17 @@ hr {
 .authlevel  {
     display: inline-block;
     margin: 0 20px;
+}
+
+footer .btn {
+    border-color: #a7a7a7;
+}
+#auth_key   {
+    margin-left: 18px;
+    width: 140px;
+}
+#auth_submit    {
+
 }
 
 /* widgets */
@@ -260,11 +277,16 @@ hr {
 
     <footer>
         <div class="menu">
+          <form method="post" action="###BASE_HREF###">
             ###MENU_MAIN###
             |
             <span class="authlevel">Auth level / permission: <b class="###AUTH_LEVEL_CLASS###"> ###AUTH_LEVEL### </b></span>
             |
             ###LINK_LOGOUT###
+            |
+            <input id="auth_key" type="password" name="key" placeholder="key">
+            <input id="auth_submit" class="btn" type="submit" name="authorize" value="Authorize">
+          </form>
         </div>
 
         <hr>
