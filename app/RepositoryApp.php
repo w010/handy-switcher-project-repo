@@ -10,7 +10,7 @@
  *
  * Subpackage: Projects Repository
  *
- * based on XCore version: 0.2.4
+ * based on XCore version: 0.2.9
  */
 
 
@@ -19,7 +19,7 @@
 const REPO_VERSION = '0.2.4';
 
 // version of app itself - not interesting for using api
-const REPO_APP_VERSION = '0.5.0';
+const REPO_APP_VERSION = '0.5.1';
 
 
 
