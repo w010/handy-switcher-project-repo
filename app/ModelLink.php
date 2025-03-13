@@ -67,7 +67,7 @@ class ModelLink  {
     {
         $this->setName((string) $itemRow['name']);
         $this->setUrl((string)  $itemRow['url']);
-        $this->setHidden(strtolower($itemRow['hidden']) == 'true');
+        $this->setHidden(is_bool($itemRow['hidden']) ? $itemRow['hidden'] : $itemRow['hidden'] === 'true');
     }
 
 

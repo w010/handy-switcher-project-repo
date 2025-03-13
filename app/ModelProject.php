@@ -152,7 +152,7 @@ class ModelProject  {
         // casting doesn't work well with bool on string - always returns true
         $this->setContexts((array) $itemRow['contexts']);
         $this->setLinks((array) $itemRow['links']);
-        $this->setHidden(strtolower($itemRow['hidden']) == 'true');
+        $this->setHidden(is_bool($itemRow['hidden']) ? $itemRow['hidden'] : $itemRow['hidden'] === 'true');
         $this->setTstamp((int) $itemRow['tstamp']);
         $this->setBackendPathSegment((string) $itemRow['backendPathSegment']);
     }
