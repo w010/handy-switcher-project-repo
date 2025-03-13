@@ -11,6 +11,7 @@ class ModelProject  {
     protected $links = [];
     protected $hidden = false;
     protected $tstamp = 0;
+    protected $backendPathSegment = '';
     protected $_additionalData = [];
 
     /**
@@ -102,6 +103,22 @@ class ModelProject  {
     }
 
     /**
+     * @return string
+     */
+    public function getBackendPathSegment(): string
+    {
+        return $this->backendPathSegment;
+    }
+
+    /**
+     * @param string $backendPathSegment
+     */
+    public function setBackendPathSegment(string $backendPathSegment): void
+    {
+        $this->backendPathSegment = $backendPathSegment;
+    }
+
+    /**
      * @return int
      */
     public function getTstamp(): int
@@ -137,6 +154,7 @@ class ModelProject  {
         $this->setLinks((array) $itemRow['links']);
         $this->setHidden(strtolower($itemRow['hidden']) == 'true');
         $this->setTstamp((int) $itemRow['tstamp']);
+        $this->setBackendPathSegment((string) $itemRow['backendPathSegment']);
     }
 
 
@@ -159,6 +177,7 @@ class ModelProject  {
             'links' => $links,
             'hidden' => $this->isHidden(),
             'tstamp' => $this->getTstamp(),
+            'backendPathSegment' => $this->getBackendPathSegment(),
         ];
     }
 
