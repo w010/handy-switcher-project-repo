@@ -19,7 +19,7 @@
 const REPO_VERSION = '0.2.4';
 
 // version of app itself - not interesting for using api
-const REPO_APP_VERSION = '0.5.0-dev';
+const REPO_APP_VERSION = '0.5.0';
 
 
 
