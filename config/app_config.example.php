@@ -11,9 +11,9 @@ return [
 
             // EXAMPLE KEYS - YOU SHOULD REMOVE THEM!
 
-            'mykey1' => 'READ',
-            'mykey2' => 'WRITE',
-            'mykey3' => 'ADMIN',
+            md5('mykey1') => 'READ',
+            md5('mykey2') => 'WRITE',
+            md5('mykey3') => 'ADMIN',
         ],
 
         'repo_name' => 'Custom Project Repo',

@@ -157,7 +157,7 @@ class RepositoryApp extends XCore  {
         parent::configure();
 
         // warn about default keys left in config
-        if ($this->settings['repo']['repo_keys']['mykey1'] || $this->settings['repo']['repo_keys']['mykey2'] || $this->settings['repo']['repo_keys']['mykey3']) {
+        if ($this->settings['repo']['repo_keys'][md5('mykey1')] || $this->settings['repo']['repo_keys'][md5('mykey2')] || $this->settings['repo']['repo_keys'][md5('mykey3')]) {
             $this->msg('- You should remove default example <b>repo_keys</b> from app_config.php', 'warn');
         }
 
@@ -208,17 +208,21 @@ class RepositoryApp extends XCore  {
         $key_incoming = XCoreUtil::cleanInputVar($_SERVER['HTTP_SWITCHER_REPO_KEY'] ?? $_POST['key'] ?? '');
         // in ajax mode check key on every call. in web mode - keep the session
         if ($key_incoming || $this->isAjaxCall) {
+            $key_hashed = md5($key_incoming);
             // (in case any problems authorizing with valid key, check what XCoreUtil::cleanInputVar does with incoming var)
-            if (in_array($key_incoming, array_keys($this->settings['repo']['repo_keys'])))    {
+            if (in_array($key_hashed, array_keys($this->settings['repo']['repo_keys'])))    {
                 // update session
-                $_SESSION['repo_auth'][$session_webroot]['key'] = $key_incoming;
+                $_SESSION['repo_auth'][$session_webroot]['key'] = $key_hashed;
                 $this->msg('Key - AUTHORIZED', 'info');
             }
             // deauthorise if invalid
             else {
                 unset($_SESSION['repo_auth']);
                 session_destroy();
-                $this->msg('UNAUTHORIZED - bad key', 'error');
+                if (!$this->isAjaxCall) {
+                    // display this message only in web mode, for ajax - it can work on "read_without_key"
+                    $this->msg('UNAUTHORIZED - bad key', 'error');
+                }
             }
         }
 
