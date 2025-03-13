@@ -1,6 +1,6 @@
 <?php
 
-const XCORE_VERSION = '0.2.8';
+const XCORE_VERSION = '0.2.9';
 
 
 
@@ -283,6 +283,7 @@ abstract class XCore implements XCoreSingleton {
 
         try {
             $this->View->assign('BASE_HREF', $this->getConfVar('baseHref'));
+            $this->View->assign('BASE_HREF_TAG', $this->getConfVar('baseHref') ? '<base href="'.$this->getConfVar('baseHref').'">' : '');
             $this->View->assign('MENU_MAIN', Loader::get(XCoreViewhelperMenu::class)->render('main', [
                 // tbd: should be read from main config
                 'wrapItem' => '|',
