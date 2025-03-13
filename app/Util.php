@@ -122,7 +122,13 @@ class Util extends XCoreUtil {
         $summary = [];
 
         // META
-        $repoDataMeta = static::getRepoDataMetaFile();
+        // read meta
+        try     {
+            $repoDataMeta = Util::getRepoDataMetaFile();
+        } catch (Exception $e)  {
+            Util::saveRepoDataStatusFile(new stdClass());
+            $repoDataMeta = Util::getRepoDataMetaFile();
+        }
         $summary['repoDataMeta'] = $repoDataMeta;
 
         // AUDIT - Last check time
