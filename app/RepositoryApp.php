@@ -206,7 +206,8 @@ class RepositoryApp extends XCore  {
 
         // update auth session if new key comes
         $key_incoming = XCoreUtil::cleanInputVar($_SERVER['HTTP_SWITCHER_REPO_KEY'] ?? $_GET['key'] ?? '');
-        if ($key_incoming) {
+        // in ajax mode check key on every call. in web mode - keep the session
+        if ($key_incoming || $this->isAjaxCall) {
             // (in case any problems authorizing with valid key, check what XCoreUtil::cleanInputVar does with incoming var)
             if (in_array($key_incoming, array_keys($this->settings['repo']['repo_keys'])))    {
                 // update session
